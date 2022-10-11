@@ -87,6 +87,7 @@ const PaginatedTable = (props) => {
 	const [sortAccessor, setSortAccessor] = useState(null)
 	const [page, setPage] = useState(1)
 	const [slice, setSlice] = useState([])
+	const [disabledFilterCard, setDisabledFilterCard] = useState(false);
 
 	const [focused, setFocused] = useState({
 		condition: false,
@@ -303,11 +304,14 @@ const PaginatedTable = (props) => {
 			accessors.push(c.accessor)
 		})
 		rowsToSend = filteredRows
-			.filter((row) => row.checked != false)
+			.filter((row) => row.checked !== false)
 			.map((r) => {
 				return columns.map((c) => {
 					if (accessors.includes(c.accessor)) {
 						let valueToSend = getObjectProp(r, c.accessor)
+						if(c.customExport){
+							valueToSend = c.customExport(valueToSend)
+						}
 						return valueToSend
 					}
 				})
@@ -600,6 +604,8 @@ const PaginatedTable = (props) => {
 								sortAccessor={sortAccessor}
 								setSortAccessor={setSortAccessor}
 								actionsHeaderText={actionsHeaderText}
+								disabledFilterCard={disabledFilterCard}
+								setDisabledFilterCard={setDisabledFilterCard}
 							/>
 
 							<Table
@@ -739,6 +745,7 @@ PaginatedTable.propTypes = {
 					color: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
 				})
 			),
+			customExport: PropTypes.func,
 		})
 	).isRequired,
 	actionsActive: PropTypes.bool,

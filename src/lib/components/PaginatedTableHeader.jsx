@@ -22,7 +22,9 @@ const PaginatedTableHeader = (props) => {
 		setSortAccessor,
 		applyFilter = null,
 		revertFilter = null,
-		actionsHeaderText
+		actionsHeaderText,
+		disabledFilterCard = true,
+		setDisabledFilterCard
 	} = props
 
 	//Column Header
@@ -54,6 +56,7 @@ const PaginatedTableHeader = (props) => {
 								setSortOrder={setSortOrder}
 								sortAccessor={sortAccessor}
 								setSortAccessor={setSortAccessor}
+								setDisabledFilterCard={setDisabledFilterCard}
 							/>
 						}
 						trigger={
@@ -63,11 +66,17 @@ const PaginatedTableHeader = (props) => {
 								size="tiny"
 								type="button"
 								icon="filter"
+								onMouseEnter={() => {
+									if(disabledFilterCard){
+										setDisabledFilterCard(false)
+									}
+								}}
 							/>
 						}
 						on="click"
 						pinned
 						position="bottom center"
+						disabled={disabledFilterCard}
 					/>
 				)}
 			</th>

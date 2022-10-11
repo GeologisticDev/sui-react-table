@@ -29,6 +29,7 @@ const ColumnFilterCard = (props) => {
 		sortOrder,
 		setSortOrder,
 		type = null,
+		setDisabledFilterCard
 	} = props
 
 	const [filters, setFilters] = useState('')
@@ -174,7 +175,10 @@ const ColumnFilterCard = (props) => {
 				labelPosition="left"
 				type="button"
 				onClick={(e) => {
-					onApply && onApply(column, currentOptions, sortAccessor, sortOrder)
+					if(onApply){
+						setDisabledFilterCard(true)
+						onApply(column, currentOptions, sortAccessor, sortOrder)
+					}
 				}}
 				disabled={!canApply}
 			/>
