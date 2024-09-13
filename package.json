@@ -1,10 +1,10 @@
 {
-	"name": "semantic-table",
+	"name": "sui-react-table",
 	"description": "SemanticTable React Components",
 	"author": "MarilesBeard5 <marilesbeard5@gmail.com> (https://www.linkedin.com/in/gmariles5/)",
 	"license": "MIT",
 	"bugs": {
-		"url": "https://github.com/MarilesBeard5/semantic-table/issues",
+		"url": "https://github.com/GeologisticDev/sui-react-table/issues",
 		"email": "marilesbeard5@gmail.com"
 	},
 	"keywords": [
@@ -23,7 +23,7 @@
 	],
 	"repository": {
 		"type": "git",
-		"url": "git@github.com:MarilesBeard5/semantic-table.git"
+		"url": "git@github.com:GeologisticDev/sui-react-table.git"
 	},
 	"dependencies": {
 		"@babel/polyfill": "^7.12.1",
