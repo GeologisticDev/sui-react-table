@@ -8,7 +8,8 @@ import styles from '../styles/global.module.scss'
 //Components
 import ColumnFilterCard from './ColumnFilterCard'
 
-const actionButton = `${styles.IconButton}` + ' ' + `${styles.nonBordered}`
+const actionButton = `${styles.IconButton} ${styles.nonBordered} `
+const actionButtonGreen = `${styles.IconButton} ${styles.nonBordered}  ${styles.colorGreen} `
 
 const PaginatedTableHeader = (props) => {
 	const {
@@ -24,7 +25,8 @@ const PaginatedTableHeader = (props) => {
 		revertFilter = null,
 		actionsHeaderText,
 		disabledFilterCard = true,
-		setDisabledFilterCard
+		setDisabledFilterCard,
+		appliedFilters = {}
 	} = props
 
 	//Column Header
@@ -57,12 +59,12 @@ const PaginatedTableHeader = (props) => {
 								sortAccessor={sortAccessor}
 								setSortAccessor={setSortAccessor}
 								setDisabledFilterCard={setDisabledFilterCard}
+								clearFilterButtonActive={!!appliedFilters[columnData.accessor]}
 							/>
 						}
 						trigger={
 							<Button
-								className={actionButton}
-								color="teal"
+								className={!!appliedFilters[columnData.accessor] ? actionButtonGreen:actionButton}
 								size="tiny"
 								type="button"
 								icon="filter"

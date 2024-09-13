@@ -50,18 +50,11 @@ function App() {
 			menuItem: 'Tab 1',
 			render: () => (
 				<div className='PageContainer'>
-					<Button
-						content='Recargar Datos'
-						type='button'
-						onClick={() => {
-							setData(generateRows(350, 560, clientsSchema))
-							setCanSave(true)
-						}}
-					/>
 					<PaginatedTable
 						loading={isLoading}
 						title='Example'
-						hideRemoveFiltersButton={true}
+						multipleAndFilters={true}
+						hideRemoveFiltersButton={false}
 						onCancel={() => {
 							setCanSave(false)
 						}}

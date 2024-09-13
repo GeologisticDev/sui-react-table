@@ -29,10 +29,11 @@ const ColumnFilterCard = (props) => {
 		sortOrder,
 		setSortOrder,
 		type = null,
-		setDisabledFilterCard
+		setDisabledFilterCard,
+		clearFilterButtonActive = false,
 	} = props
 
-	const [filters, setFilters] = useState('')
+	const [optionsFilter, setOptionsFilter] = useState('')
 
 	const [filteredOptions, setFilteredOptions] = useState([])
 	const [currentOptions, setCurrentOptions] = useState([])
@@ -93,7 +94,7 @@ const ColumnFilterCard = (props) => {
 
 	useEffect(() => {
 		let filteredLabeledOptions = currentOptions.filter((option) => {
-			if (filters) {
+			if (optionsFilter) {
 				const { type = 'text' } = column
 				switch (type) {
 					case 'text':
@@ -102,9 +103,9 @@ const ColumnFilterCard = (props) => {
 						return (option.label ? option.label : '')
 							.toString()
 							.toLocaleLowerCase()
-							.includes(filters.toLocaleLowerCase())
+							.includes(optionsFilter.toLocaleLowerCase())
 					case 'boolean':
-						switch (filters) {
+						switch (optionsFilter) {
 							case 'si':
 								return option
 							case 'no':
@@ -119,7 +120,7 @@ const ColumnFilterCard = (props) => {
 			return true
 		})
 		setFilteredOptions(filteredLabeledOptions)
-	}, [filters, currentOptions])
+	}, [optionsFilter, currentOptions])
 
 	const handleCheckChange = (option) => {
 		setCurrentOptions((previousCurrentOptions) => {
@@ -177,7 +178,7 @@ const ColumnFilterCard = (props) => {
 				onClick={(e) => {
 					if(onApply){
 						setDisabledFilterCard(true)
-						onApply(column, currentOptions, sortAccessor, sortOrder)
+						onApply(column, filteredOptions, sortAccessor, sortOrder, true)
 					}
 				}}
 				disabled={!canApply}
@@ -189,9 +190,9 @@ const ColumnFilterCard = (props) => {
 				labelPosition="left"
 				type="button"
 				onClick={(e) => {
-					onApply && onApply(column, options, sortAccessor, sortOrder)
+					onApply && onApply(column, options, sortAccessor, sortOrder, false)
 				}}
-				disabled={true}
+				disabled={!clearFilterButtonActive}
 			/>
 		</Button.Group>
 	)
@@ -239,10 +240,10 @@ const ColumnFilterCard = (props) => {
 		<Input
 			size="large"
 			placeholder={`${column.Header}`}
-			value={filters[column.accessor]}
+			value={optionsFilter[column.accessor]}
 			onChange={(e) => {
 				const value = e.target.value
-				setFilters(value)
+				setOptionsFilter(value)
 			}}
 			icon="search"
 		/>

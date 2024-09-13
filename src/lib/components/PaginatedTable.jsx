@@ -41,6 +41,8 @@ const rowActionButton = `${styles.IconButton}` + ' ' + `${styles.nonBordered}`
 const tableActionButton =
 	`ui blue basic button ${styles.Bordered}` + ' ' + `${styles.shadowOnHover}`
 
+let filters = {}
+
 const PaginatedTable = (props) => {
 	const {
 		title = 'Table',
@@ -76,6 +78,8 @@ const PaginatedTable = (props) => {
 		hideRemoveFiltersButton = false,
 		enableExternalSave = false,
 		onInnerUpdate = null,
+		multipleAndFilters = true,
+
 	} = props
 
 	// Inner States
@@ -121,23 +125,52 @@ const PaginatedTable = (props) => {
 		{ accessor, type },
 		options,
 		sortBy,
-		sortDirection
+		sortDirection,
+		activate
 	) => {
 		let newRows = getSortedArray(rows, {
 			order: sortDirection,
 			accessor: sortBy,
 		})
+		let renderedRows = []
 
-		let renderedRows = newRows.map((row) => {
-			let currentRowValue = getObjectProp(row, accessor)
-			let found = options.find((option) => {
-				let foundRowValue = getObjectProp(option, accessor)
-				return currentRowValue === foundRowValue
+		if(multipleAndFilters){
+			if(activate){
+				filters[accessor] = options.reduce((acc,o)=>{
+					return {...acc,[o[accessor]]:o.checked}
+				},{})
+			}else{
+				delete filters[accessor]
+			}
+
+			newRows.forEach(r=>{
+				let renderRow = true;
+				Object.entries(filters).forEach(f=>{
+					let found = f[1][r[f[0]]]
+					renderRow = renderRow && found
+				})
+
+				if(renderRow){
+					renderedRows = [...renderedRows,{ ...r, checked: true }]
+				}else{
+					renderedRows = [...renderedRows,{ ...r, checked: false }]
+				}
 			})
-			return found ? { ...row, checked: found.checked } : row
-		})
-		setHasBeenFiltered(true)
+			let aux = 1;
+		}else{
+			renderedRows = newRows.map((row) => {
+				let currentRowValue = getObjectProp(row, accessor)
+				let found = options.find((option) => {
+					let foundRowValue = getObjectProp(option, accessor)
+					return currentRowValue === foundRowValue
+				})
+				return found ? { ...row, checked: found.checked } : row
+			})
+		}
+		
+		setHasBeenFiltered((Object.entries(filters).length>0))
 		setFilteredRows(renderedRows)
+		setDisabledFilterCard(true)
 	}
 
 	const removeFilters = () => {
@@ -606,6 +639,7 @@ const PaginatedTable = (props) => {
 								actionsHeaderText={actionsHeaderText}
 								disabledFilterCard={disabledFilterCard}
 								setDisabledFilterCard={setDisabledFilterCard}
+								appliedFilters={filters}
 							/>
 
 							<Table
